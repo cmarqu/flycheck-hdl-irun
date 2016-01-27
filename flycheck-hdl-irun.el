@@ -57,13 +57,13 @@ irun is part of the Cadence Incisive Enterprise Simulator
             (config-file "-cdslib" flycheck-hdl-irun-cdslib)
             source)
   :error-patterns
-  ((info line-start (one-or-more (in "a-z"))
+  ((info line-start (one-or-more (in "a-z_"))
          ": *I," (id (one-or-more (in "A-Z0-9"))) " (" (file-name) "," line "|" column "): "
          (message) line-end)
-   (warning line-start (one-or-more (in "a-z"))
+   (warning line-start (one-or-more (in "a-z_"))
             ": *W," (id (one-or-more (in "A-Z0-9"))) " (" (file-name) "," line "|" column "): "
             (message) line-end)
-   (error line-start (one-or-more (in "a-z"))
+   (error line-start (one-or-more (in "a-z_"))
           (or ": *E," ": *F,") (id (one-or-more (in "A-Z0-9"))) " (" (file-name) "," line "|" column "): "
           (message) line-end))
   :modes (systemc-mode vhdl-mode verilog-mode))
