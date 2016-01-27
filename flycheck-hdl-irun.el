@@ -4,7 +4,7 @@
 ;;
 ;; Author: Colin Marquardt <colin@marquardt-home.de>
 ;; Created: 21 January 2016
-;; Version: 0.2
+;; Version: 0.3
 ;; Package-Requires: ((flycheck "0.25"))
 
 ;;; Commentary:
@@ -19,6 +19,7 @@
 ;; (add-hook 'systemc-mode-hook 'flycheck-mode)
 ;; (setq flycheck-hdl-irun-hdlvar
 ;;   (concat (getenv "PRJ_HOME") "/env/df2/hdl.var"))
+;; (setq flycheck-hdl-irun-args (quote ("-v200x" "-extv200x")))
 
 ;;; License:
 
@@ -43,8 +44,11 @@
 ;;; Code:
 (require 'flycheck)
 
+(flycheck-def-args-var flycheck-hdl-irun-args hdl-irun)
+
 (flycheck-def-config-file-var flycheck-hdl-irun-hdlvar
     hdl-irun "hdl.var")
+
 (flycheck-def-config-file-var flycheck-hdl-irun-cdslib
     hdl-irun nil)
 
@@ -55,7 +59,10 @@ irun is part of the Cadence Incisive Enterprise Simulator
   :command ("irun" "-compile"
             (config-file "-hdlvar" flycheck-hdl-irun-hdlvar)
             (config-file "-cdslib" flycheck-hdl-irun-cdslib)
-            source)
+            (eval flycheck-hdl-irun-args)
+            ;; Must use source-original so relative imports and
+            ;; qualified references to local variables resolve correctly
+            source-original)
   :error-patterns
   ((info line-start (one-or-more (in "a-z_"))
          ": *I," (id (one-or-more (in "A-Z0-9"))) " (" (file-name) "," line "|" column "): "
